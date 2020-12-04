@@ -1,4 +1,4 @@
-f = open('report','r').readlines()
+f = open('input','r').readlines()
 
 for l1 in f:
     for l2 in f:
