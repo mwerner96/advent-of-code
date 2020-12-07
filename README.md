@@ -10,3 +10,4 @@
 |   4 | Bash oneliner             |
 |   5 | Bash + Python             |
 |   6 | C++ Bit wizardry          |
+|   7 | Most terrible Python      |
