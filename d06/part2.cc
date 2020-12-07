@@ -1,17 +1,6 @@
 #include <iostream>
 #include <fstream>
 
-// from: https://jjj.de/fxt/fxtbook.pdf
-// Arndt, Joerg: Matters Computational
-static inline uint32_t count_bits(uint32_t a) {
-    const uint32_t mask = 011111111111UL;
-    a = (a - ((a&~mask)>>1)) - ((a>>2)&mask);
-    a += a>>3;
-    a = (a & 070707) + ((a>>18) & 070707);
-    a *= 010101;
-    return ((a>>12) & 0x3f);
-}
-
 int main() {
     std::ifstream is("input");
 
@@ -26,7 +15,7 @@ int main() {
     while (is.get(c)) {
         if (c == '\n') {
             if (new_record) {
-                count += count_bits(map_group);
+                count += __builtin_popcount(map_group);
                 map_group = 0xFFFFFFFF;
             }
             else {
@@ -41,7 +30,7 @@ int main() {
     }
 
     // add last entry, since we don't have the double '\n' there
-    count += count_bits(map_group);
+    count += __builtin_popcount(map_group);
 
     std::cout << count << std::endl;
 
