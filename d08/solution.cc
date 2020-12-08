@@ -78,14 +78,16 @@ struct Program {
 };
 
 int main() {
-    Program p;
+    Program p_orig;
     bool exitstatus;
-    std::cout << "Part 1: " << p.run(exitstatus) << std::endl;
+
+    std::cout << "Part 1: " << Program(p_orig).run(exitstatus) << std::endl;
+
     int flipidx = 0;
     while (!exitstatus) {
-        Program p;
-        p.flip_instruction(flipidx++);
-        int res = p.run(exitstatus);
+        Program p_mod(p_orig);
+        p_mod.flip_instruction(flipidx++);
+        int res = p_mod.run(exitstatus);
         if (exitstatus) {
             std::cout << "Part 2: " << res << std::endl;
             break;
