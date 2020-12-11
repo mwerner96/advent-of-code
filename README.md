@@ -12,5 +12,6 @@
 |   6 | C++ Bit wizardry          |
 |   7 | Most terrible Python      |
 |   8 | C++                       |
-|   9 | C++                       |
+|   9 | C                         |
 |  10 | Python                    |
+|  11 | C++                       |
