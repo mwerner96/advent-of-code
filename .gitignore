@@ -232,3 +232,7 @@ cython_debug/
 ############### Rust
 # executables
 main
+.*.sw[po]
+target/
+**/*.rs.bk
+.idea/
