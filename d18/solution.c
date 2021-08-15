@@ -26,7 +26,7 @@ static inline void reduce()
     tos = op == '*' ? tos * val : tos + val;
 }
 
-stack_t calc_line()
+stack_t calc_line_v1()
 {
     char tok = getchar();
     if (tok == EOF)
@@ -36,15 +36,16 @@ stack_t calc_line()
         switch (tok)
         {
         case '(': // enter nesting in stack
-            push(0);
-            push('+');
+            push('(');
             break;
         case ')': // leave nesting in stack
             reduce();
+            stack_t val = pop();
+            tos = val;
             break;
         case '*':
         case '+':
-            if (sp > 1) // before pushing next op, resolve pending operation
+            if (sp > 1 && stack[sp-2] != '(') // before pushing next op, resolve pending operation
                 reduce();
             push(tok);
             break;
@@ -55,7 +56,43 @@ stack_t calc_line()
             break;
         }
     } while ((tok = getchar()) != '\n');
-    if (sp > 1) // only theoretically need this for trivial input lines (one single number)
+    while (sp > 1) // reduce remaining expression
+        reduce();
+    return pop();
+}
+
+stack_t calc_line_v2()
+{
+    char tok = getchar();
+    if (tok == EOF)
+        return -1;
+    do
+    {
+        switch (tok)
+        {
+        case '(':
+            push('(');
+            break;
+        case ')':
+            while(stack[sp-2] != '(')
+                reduce();
+            stack_t val = pop();
+            tos = val;
+            break;
+        case '+':
+        case '*':
+            if (stack[sp - 2] == '+')
+                reduce();
+            push(tok);
+            break;
+        case ' ':
+            break;
+        default:
+            push(tok - '0');
+            break;
+        }
+    } while ((tok = getchar()) != '\n');
+    while (sp > 1)
         reduce();
     return pop();
 }
@@ -64,7 +101,7 @@ int main()
 {
     stack_t sum = 0;
     stack_t res;
-    while ((res = calc_line()) != -1)
+    while ((res = calc_line_v2()) != -1)
         sum += res;
     assert(!sp);
     printf("%lld\n", sum);
