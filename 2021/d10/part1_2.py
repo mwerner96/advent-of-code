@@ -28,28 +28,23 @@ scores = []
 error = 0
 for line in lines:
     # build stack for part 1
-    broken = False
     stack = []
     for c in line:
-        if c in '([{<':
+        if c in matching.values():
             stack.append(c)
         else:
             opening = stack.pop()
             if opening != matching[c]:
                 error += errors[c]
-                broken = True
                 break
+    else:
+        # build score for part 2
+        score = 0
+        for c in reversed(stack):
+            score *= 5
+            score += autocomplete[c]
 
-    if broken:
-        continue
-
-    # build score for part 2
-    score = 0
-    for c in reversed(stack):
-        score *= 5
-        score += autocomplete[c]
-
-    scores.append(score)
+        scores.append(score)
 
 # part 1
 print(error)
