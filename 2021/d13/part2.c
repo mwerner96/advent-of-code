@@ -7,7 +7,7 @@
 
 int main()
 {
-    bool paper[2000][2000] = {false};
+    bool paper[MAX_X][MAX_Y] = {false};
     int pos_x, pos_y;
     while (scanf("%d,%d\n", &pos_x, &pos_y) == 2)
     {
