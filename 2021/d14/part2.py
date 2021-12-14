@@ -1,17 +1,13 @@
-from collections import defaultdict
+from collections import Counter
+from itertools import permutations
 
 
 with open('input') as f:
     polymer = f.readline().strip()
-    pairs = defaultdict(int)
-    for a, b in zip(polymer, polymer[1:]):
-        pairs[a+b] += 1
-    elements = defaultdict(int)
-    for e in polymer:
-        elements[e] += 1
+    pairs = Counter(zip(polymer, polymer[1:]))
     f.readline()
     rules = {
-        pair: element
+        tuple(pair): element
         for pair, element
         in (
             l.strip().split(' -> ')
@@ -20,16 +16,17 @@ with open('input') as f:
         )
     }
 
+assert(set(rules) == set(permutations([*rules.values(), *polymer], 2)))
+
 for _ in range(40):
-    new_pairs = defaultdict(int)
-    for pair in pairs:
-        if pair in rules:
-            new_pairs[pair[0]+rules[pair]] += pairs[pair]
-            new_pairs[rules[pair]+pair[1]] += pairs[pair]
-            elements[rules[pair]] += pairs[pair]
-        else:
-            print('else')
-            new_pairs[pair] += pairs[pair]
+    new_pairs = Counter()
+    for pair, count in pairs.items():
+        new_pairs[(pair[0], rules[pair])] += count
+        new_pairs[(rules[pair], pair[1])] += count
     pairs = new_pairs
+
+elements = Counter({polymer[0]: 1})
+for (_, b), count in pairs.items():
+    elements[b] += count
 
 print(max(elements.values()) - min(elements.values()))
