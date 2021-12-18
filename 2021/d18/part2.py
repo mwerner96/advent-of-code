@@ -1,6 +1,7 @@
 import json
 from math import floor, ceil
 from itertools import permutations
+import multiprocess as mp
 
 
 def add(a, b):
@@ -97,10 +98,12 @@ def magnitude(a):
 with open('input') as f:
     homework = [json.loads(l) for l in f.readlines()]
 
-largest = 0
-for a, b in permutations(homework, 2):
-    mag = magnitude(add(a, b))
-    if mag > largest:
-        largest = mag
+pool = mp.Pool(mp.cpu_count())
+magnitudes = pool.map(
+    lambda pair: magnitude(add(pair[0], pair[1])),
+    permutations(homework, 2)
+)
+pool.close()
+pool.join()
 
-print(largest)
+print(max(magnitudes))
