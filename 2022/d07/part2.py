@@ -1,3 +1,6 @@
+from collections import defaultdict
+from itertools import product
+
 lines = open("input").read().splitlines()
 
 pwd = []
@@ -15,22 +18,22 @@ for l in lines:
         first, second = l.split()
         path = "/".join(pwd)
         if path not in tree:
-            tree[path] = []
+            # this cannot be replaced by defaultdict
+            # we would miss directories with no files but with subdirectories
+            # which still count towards the total score
+            tree[path] = 0
         if first != "dir":
-            tree[path].append((int(first), second))
+            tree[path] += int(first)
 
-dirsize = {}
-for dir, files in tree.items():
-    dirsize[dir] = sum(size for size, _ in files)
+recsize = defaultdict(int)
+for dir, other in product(tree.keys(), tree.keys()):
+    if dir in other:
+        recsize[dir] += tree[other]
 
-recsize = {}
-for dir in tree.keys():
-    recsize[dir] = 0
-    for other in tree.keys():
-        if dir in other:
-            recsize[dir] += dirsize[other]
-
-for size in sorted(recsize.values()):
-    if (70000000 - recsize["/"]) + size >= 30000000:
-        print(size)
-        break
+print(
+    next(
+        size
+        for size in sorted(recsize.values())
+        if (70000000 - recsize["/"]) + size >= 30000000
+    )
+)
