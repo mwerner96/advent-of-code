@@ -1,6 +1,9 @@
 ############### VSCode
 .vscode/
 
+############### AoC
+input
+
 ############### C
 # Prerequisites
 *.d
