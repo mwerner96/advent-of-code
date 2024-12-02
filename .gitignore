@@ -4,6 +4,9 @@
 ############### AoC
 input
 
+############### macOS
+.DS_Store
+
 ############### C
 # Prerequisites
 *.d
